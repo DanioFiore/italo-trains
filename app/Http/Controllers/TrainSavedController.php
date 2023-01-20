@@ -27,7 +27,7 @@ class TrainSavedController extends Controller
         $validator = Validator::make((array)$trainData, [
             'TrainNumber' => 'required|max:4',
             'DepartureStationDescription' => 'required|string',
-            'DepartureDate' => 'required|date',
+            'DepartureDate' => 'required|time',
             'ArrivalStationDescription' => 'required',
             'ArrivalDate' => 'required|time',
             'Distruption.*.DelayAmount' => 'required|numeric',
