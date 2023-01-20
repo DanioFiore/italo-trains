@@ -26,7 +26,22 @@
                             <td>{{$trainToShow->arrival_place}} | {{ (new DateTime($trainToShow->arrival_time))->format('H:i') }}</td>
                         </tr>
                         <tr>
-                            <th>Stations</th>
+                            <th scope="row">Delay</th>
+                            <td>
+                                @if ($trainToShow->delay < 0)
+                                <i class="bi bi-circle-fill text-warning"></i>
+                                    Early
+                                @elseif ($trainToShow->delay > 10)
+                                <i class="bi bi-circle-fill text-danger"></i>
+                                    Delay:{{$trainToShow->delay}} min
+                                @else
+                                <i class="bi bi-circle-fill text-success"></i>
+                                    In time
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Stations</th>
                             <td>
                                 @foreach ($stations as $station)
                                     {{$station->name}}: Arrival: {{ (new DateTime($station->arrival_time))->format('H:i') }} - Departure:
