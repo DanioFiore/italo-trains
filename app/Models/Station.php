@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Station extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'arrival_time', 'departure_time'];
+    protected $table = 'stations';
+    protected $primaryKey = 'id';
+    protected $fillable = ['name', 'arrival_time', 'departure_time', 'train_id'];
 
-    public function trains() {
-        return $this->belongsToMany(Train::class);
+    public function train() {
+        return $this->belongsTo(Train::class);
     }
 }

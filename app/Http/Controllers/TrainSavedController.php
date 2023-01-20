@@ -18,7 +18,6 @@ class TrainSavedController extends Controller
         $trainData = json_decode($request->train_data);
 
         // validation start
-
         // create a custom validation for validate the time
         Validator::extend('time', function ($attribute, $value, $parameters, $validator) {
             return preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $value);
@@ -28,9 +27,9 @@ class TrainSavedController extends Controller
         $validator = Validator::make((array)$trainData, [
             'TrainNumber' => 'required|max:4',
             'DepartureStationDescription' => 'required|string',
-            'DepartureDate' => 'required',
+            'DepartureDate' => 'required|date',
             'ArrivalStationDescription' => 'required',
-            'ArrivalDate' => 'required',
+            'ArrivalDate' => 'required|time',
             'Distruption.*.DelayAmount' => 'required|numeric',
             'Stations.*.LocationDescription' => 'required|string',
             'Stations.*.ActualArrivalTime' => 'required|time',
@@ -47,6 +46,7 @@ class TrainSavedController extends Controller
         $trainData = json_decode($request->train_data);
 
         $train = new Train;
+
         // capture the current date for save the departure date of the train
         $current_date = date('Y-m-d');
 
@@ -61,27 +61,21 @@ class TrainSavedController extends Controller
             'delay'=> $trainData->Distruption->DelayAmount,
         ]);
 
-        $rawStations = $train->Stations;
+        // capture the right train to save the correct id in the stations for the one to many relation
+        $train_to_match = Train::where([
+            ['number', $trainData->TrainNumber],
+            ['departure_date', $current_date]
+        ])->first();
+        
+        $rawStations = $trainData->Stations;
         // save every station in the stations table
         foreach ($rawStations as $station) {
-            Station::updateOrCreate([
+            $train_to_match->stations()->updateOrCreate([
                 'name' => $station->LocationDescription,
                 'arrival_time' => $station->ActualArrivalTime,
                 'departure_time' => $station->ActualDepartureTime,
             ]);
         }
-
-        
-        // Train::updateOrCreate([
-        //     'number'=> $train->TrainNumber,
-        //     'departure_place'=> $train->DepartureStationDescription,
-        //     'departure_time'=> $train->DepartureDate,
-        //     'departure_date'=> $current_date,
-        //     'arrival_place'=> $train->ArrivalStationDescription,
-        //     'arrival_time'=> $train->ArrivalDate,
-        //     'delay'=> $train->Distruption->DelayAmount,
-            
-        // ]);
 
         // $pagination is used for guarantee that the current pagination will not be lost after a request
         $pagination = request()->get('pagination');
@@ -98,7 +92,13 @@ class TrainSavedController extends Controller
         $number = $request->train_number;
         $train = Train::where('number', $number)->get();
         $trainToShow = $train[0];
-        return view('show-details',['trainToShow' => $trainToShow]);
+    
+        $stations = Station::where('train_id', $trainToShow->id)->get();
+        // dd($stations);
+        return view('show-details',[
+            'trainToShow' => $trainToShow,
+            'stations' => $stations,
+        ]);
     }
 
     // pass to the trains-saved view all the train into the db in descendent order and paginated

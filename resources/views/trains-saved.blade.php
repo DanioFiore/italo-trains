@@ -64,14 +64,14 @@
 
                                 {{-- departure/arrival column --}}
                                 <td class="text-center">
-                                    {{ $train['departure_place'] }} {{ $train['departure_time'] }}
+                                    {{ $train['departure_place'] }} {{ (new DateTime($train['departure_time']))->format('H:i') }}
                                     <i class="bi bi-arrow-right"></i>
-                                    {{ $train['arrival_place'] }} {{ $train['arrival_time'] }}
+                                    {{ $train['arrival_place'] }} {{ (new DateTime($train['arrival_time']))->format('H:i') }}
                                 </td>
 
-                                {{-- saved time column --}}
+                                {{-- date time column --}}
                                 <td>
-                                    {{$train['departure_date']}}
+                                    {{ \Carbon\Carbon::parse($train['departure_date'])->format('d-m-Y') }}
                                 </td>
 
                                 {{-- details column --}}

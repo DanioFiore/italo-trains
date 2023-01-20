@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('arrival_place');
             $table->time('arrival_time');
             $table->timestamps();
-            $table->index('number');
+            $table->index(['number', 'departure_date']);
         });
     }
 

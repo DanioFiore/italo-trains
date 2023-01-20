@@ -19,22 +19,34 @@
                         </tr>
                         <tr>
                             <th scope="row">Departure From</th>
-                            <td>{{$trainToShow->departure_place}} | {{$trainToShow->departure_time}}</td>
-                            
+                            <td>{{$trainToShow->departure_place}} | {{ (new DateTime($trainToShow->departure_time))->format('H:i') }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Arrival To</th>
-                            <td>{{$trainToShow->arrival_place}} | {{$trainToShow->arrival_time}}</td>
+                            <td>{{$trainToShow->arrival_place}} | {{ (new DateTime($trainToShow->arrival_time))->format('H:i') }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Stations</th>
-                            <td>{{$trainToShow->stations}}</td>
+                            <th>Stations</th>
+                            <td>
+                                @foreach ($stations as $station)
+                                    {{$station->name}}: Arrival: {{ (new DateTime($station->arrival_time))->format('H:i') }} - Departure:
+                                    {{ (new DateTime($station->departure_time))->format('H:i') }}
+                                    <br>
+                                @endforeach
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <a href="{{route('trains-saved')}}" class="btn btn-danger">Go Back</a>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="{{route('trains-saved')}}" class="btn btn-danger">Go Back</a>
+            </div>
+        </div>
     </div>
 
 </x-layout>

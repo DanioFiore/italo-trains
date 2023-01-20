@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('station_train', function (Blueprint $table) {
-            $table->unsignedBigInteger('station_id');
-            $table->unsignedBigInteger('train_id');
+        Schema::table('stations', function (Blueprint $table) {
+            $table->unsignedBigInteger('train_id')->nullable();
 
-            $table->foreign('station_id')->references('id')->on('stations')->onDelete('cascade');
             $table->foreign('train_id')->references('id')->on('trains')->onDelete('cascade');
+
+            $table->index('train_id');
         });
     }
 
@@ -29,6 +29,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('station_train');
+        Schema::table('stations', function (Blueprint $table) {
+            //
+        });
     }
 };
