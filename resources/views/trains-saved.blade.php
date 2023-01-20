@@ -74,6 +74,20 @@
                                     {{ \Carbon\Carbon::parse($train['departure_date'])->format('d-m-Y') }}
                                 </td>
 
+                                {{-- delay column --}}
+                                <td>
+                                    @if ($train['delay'] < 0)
+                                    <i class="bi bi-circle-fill text-warning"></i>
+                                        Early
+                                    @elseif ($train['delay'] > 10)
+                                    <i class="bi bi-circle-fill text-danger"></i>
+                                        Delay:{{ $train['delay'] }} min
+                                    @else
+                                    <i class="bi bi-circle-fill text-success"></i>
+                                        In time
+                                    @endif
+                                </td>
+
                                 {{-- details column --}}
                                 <td>
                                     <form action="{{route('show-details')}}" method="GET">

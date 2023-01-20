@@ -56,7 +56,7 @@
                                     {{ $train['ArrivalStationDescription'] }} {{ $train['ArrivalDate'] }}
                                 </td>
 
-                                {{-- time column --}}
+                                {{-- delay column --}}
                                 <td>
                                     @if ($train['Distruption']['DelayAmount'] < 0)
                                     <i class="bi bi-circle-fill text-warning"></i>
