@@ -94,7 +94,6 @@ class TrainSavedController extends Controller
         $trainToShow = $train[0];
     
         $stations = Station::where('train_id', $trainToShow->id)->get();
-        // dd($stations);
         return view('show-details',[
             'trainToShow' => $trainToShow,
             'stations' => $stations,
